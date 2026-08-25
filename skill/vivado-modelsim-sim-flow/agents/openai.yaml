@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vivado ModelSim 仿真流程"
+  short_description: "生成自检 testbench 并执行 ModelSim 全层级波形仿真"
+  default_prompt: "Use $vivado-modelsim-sim-flow 根据 DUT 生成覆盖正常与异常场景的自检 testbench，加入独立组合参考模型、scoreboard、详细 monitor 和结构化日志，再运行 ModelSim 仿真并保存全层级 WLF。"

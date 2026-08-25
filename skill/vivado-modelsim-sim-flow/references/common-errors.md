@@ -1,0 +1,21 @@
+# 常见错误
+
+- 查看报错时，不要只判断日志里有没有 `Error`；要优先定位第一条真实错误的详细内容、对应文件、行号和上下文。
+- `launch_simulation` 后如果马上出现报错，不要先怀疑后续脚本；先看 Vivado 自动触发的第一次 compile/simulate 暴露了什么问题。
+- `Parameter ... not found for override`
+  - 通常表示 testbench 的参数覆盖列表已经过期，和当前 RTL 不一致。
+- `Port ... not found in module`
+  - 通常表示 testbench 的端口连接列表已经过期，和当前 RTL 不一致。
+- `Parameter declaration missing required 'parameter' keyword`
+  - 通常表示旧式 Verilog 参数写法不被当前 ModelSim 接受。
+- `Error loading design`
+  - 不要只看这一句，先往上找第一条真实错误。
+- `Failed to open ...` / `No such file or directory`
+  - 通常表示 testbench 内部文件路径或 `simulate.do` 中的 WLF 路径是相对于错误目录写的。先确认 ModelSim 当前运行目录，再判断是否需要临时改成绝对路径验证。
+- `Failed to open ...` / `Permission denied`
+  - 通常表示目标输出文件已存在且被占用，或当前进程无法覆盖原文件。先检查同名 `wlf`、`vcd`、`csv` 是否已存在；必要时先改名备份再重跑。
+- `WLF file currently in use` / `Could not open WLF file`
+  - 不要先假设是用户手动打开了该文件；先看日志给出的占用进程名称、`ProcessID` 和备用 `WLF` 文件名。
+  - 如果用户同意强制关闭，可执行 `taskkill /PID <pid> /F`，然后重新运行 `simulate.bat`。
+  - 如果日志已经切换到备用 `WLF`，先打开实际写入的那个文件，不要继续默认查看原始 `wlf`。
+  - 如果占用进程无法结束，或执行 `taskkill` 时提示进程不存在，但备用 `WLF` 已成功生成，可复制或改名为一个明确的 `.wlf` 文件后再交付给用户。
